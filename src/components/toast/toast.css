@@ -1,0 +1,37 @@
+@import "../../assets/variables.css";
+
+.snackbar {
+    width: 100%;
+    position: fixed;
+    padding: 10px 16px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.snackbar-data {
+    display: flex;
+    align-items: center;
+}
+
+.snackbar-bottom {
+    bottom: 0;
+}
+
+.snackbar-top {
+    top: 0;
+}
+
+.snackbar-blue {
+    background: var(--colour-blue-main);
+    color: var(--colour-white);
+}
+
+.show-snackbar {
+    display: block;
+}
+
+.hide-snackbar {
+    display: none;
+}

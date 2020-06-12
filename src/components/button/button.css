@@ -1,0 +1,61 @@
+@import "../../assets/variables.css";
+
+.btn {
+    padding: 10px;
+    font-size: 11.5pt;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.button-1 {
+    width: 100%;
+}
+
+.button-2 {
+    width: 49%;
+}
+
+.btn-snack {
+    background: 0;
+    color: var(--colour-white);
+    border: 0;
+}
+
+.btn-snack:hover {
+    background: var(--colour-blue-outline);
+}
+
+.btn-snack:focus {
+    outline: 0;
+    background: var(--colour-blue-outline);
+}
+
+.btn-button {
+    background: var(--colour-white);
+    color: var(--colour-black);
+    border: 1px solid var(--colour-grey);
+}
+
+.btn-button:hover {
+    background: var(--colour-grey);
+}
+
+.btn-add,
+.btn-submit {
+    background: var(--colour-blue-main);
+    color: var(--colour-white);
+    border: 1px solid var(--colour-blue-outline);
+}
+
+.btn-add:hover,
+.btn-submit:hover {
+    background: var(--colour-blue-outline);
+}
+
+.btn-icon-button {
+    border: 0;
+    outline: 0;
+    width: 43px;
+    height: 43px;
+    border-radius: 43px;
+}

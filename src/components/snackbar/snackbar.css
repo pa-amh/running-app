@@ -1,0 +1,49 @@
+.snackbar {
+    display: flex;
+    align-items: center;
+    visibility: hidden;
+    z-index: 9999;
+    bottom: 0;
+    width: 100%;
+    position: fixed;
+    padding: 10px 16px;
+    flex-direction: row;
+    justify-content: space-between;
+    box-sizing: border-box;
+    height: 58px;
+}
+
+.snackbar.show {
+    visibility: visible;
+    animation: fadein 0.5s, fadeout 0.5s 5s;
+}
+
+.snackbar.undo {
+    visibility: visible;
+    animation: show 0s, fadeout 0.5s 2s;
+}
+
+.snackbar.show:hover {
+    animation-play-state: paused;
+}
+
+.snackbar.hide {
+    background: green;
+    animation: fadeout 0.5s;
+}
+
+.snackbar-remove {
+    background: var(--colour-blue-main);
+    color: var(--colour-white);
+}
+
+/*Animations to fade the snackbar in and out*/
+@keyframes fadein {
+  from {bottom: -58px;}
+  to {bottom: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 0;}
+  to {bottom: -58px; opacity: 0;}
+}

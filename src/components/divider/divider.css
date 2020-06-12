@@ -1,0 +1,19 @@
+@import "../../assets/variables.css";
+
+.divider {
+    width: 100%;
+    height: 10px;
+    margin: 24px 0;
+}
+
+.height-small {
+    height: 1px;
+}
+
+.colour-black {
+    background: black;
+}
+
+.colour-grey {
+    background: var(--colour-grey);
+}

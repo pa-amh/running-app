@@ -1,0 +1,17 @@
+.dashboard-container {
+    position: relative;
+}
+
+.dashboard-container-main {
+    max-width: 80%;
+    margin: auto auto;
+}
+
+.data-list {
+    list-style: none;
+    padding: 0;
+}
+
+.edit {
+    transform: scale(-1, 1);
+}

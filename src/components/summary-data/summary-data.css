@@ -1,0 +1,11 @@
+.summary-item:not(:last-child)::after {
+    content: ' - ';
+}
+
+.summary-title {
+    font-weight: bold;
+}
+
+.summary-title::after {
+    content: ': ';
+}
