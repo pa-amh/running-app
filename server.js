@@ -1,16 +1,16 @@
 const express = require('express');
-const bodyParser = require('body-parser')
+const path = require('path');
 
-const port = 3030;
+const port = process.env.PORT || 8080;
 
 
 express()
-    .use(bodyParser.json())
-    .use(bodyParser.urlencoded({extended: true}))
-    .get('/', function (req, res) {
-        res.json(200, {msg: 'hello world'});
+    .use(express.static(__dirname))
+    .use(express.static(path.join(__dirname, 'build')))
+    .get('/ping', function (req, res) {
+        return res.send('pong');
     })
-    .get('/api', function (req, res) {
-        res.json(200, {msg: 'OK' });
+    .get('/*', function (req, res) {
+        res.sendFile(path.join(__dirname, 'build', 'index.html'));
     })
-    .listen(process.env.PORT || port);
+    .listen(port, () => console.log(`Listening on port: ${port}`));
