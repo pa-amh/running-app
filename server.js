@@ -14,7 +14,7 @@ express()
     .use(express.static(__dirname))
     .use(express.static(path.join(__dirname, 'build')))
     .set('view engine', 'ejs')
-    .get('/', (req, res) => res.render(path.join(__dirname, 'build', 'index.html')))
+    .get('/', (req, res) => res.render('pages/index'))
     .get('/ping', (req, res) => res.send('<h1>pong</h1>'))
     .get('/db', async (req, res) => {
         try {
