@@ -3,11 +3,10 @@ const path = require('path');
 const {Pool} = require('pg')
 
 const PORT = process.env.PORT || 8080;
+const PG_CONNECTION_STRING = process.env.DATABASE_URL || 'postgresql://postgres:Adzisace123@localhost:5432/react-running-app';
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
+    connectionString: PG_CONNECTION_STRING,
+    ssl: !!process.env.DATABASE_URL
 });
 
 express()
@@ -15,7 +14,7 @@ express()
     .use(express.static(path.join(__dirname, 'build')))
     .set('view engine', 'ejs')
     .get('/', (req, res) => res.render('pages/index'))
-    .get('/ping', (req, res) => res.send('<h1>pong</h1>'))
+    .get('/ping', (req, res) => res.send('blob'))
     .get('/db', async (req, res) => {
         try {
             const client = await pool.connect();
