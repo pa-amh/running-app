@@ -13,7 +13,7 @@ const pool = new Pool({
 express()
     .use(express.static(__dirname))
     .use(express.static(path.join(__dirname, 'build')))
-    .get('/*', function (req, res) {
+    .get('/', function (req, res) {
         res.sendFile(path.join(__dirname, 'build', 'index.html'));
     })
     .get('/ping', function (req, res) {
