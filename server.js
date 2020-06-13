@@ -14,6 +14,7 @@ const pool = new Pool({
 express()
     .use(express.static(__dirname))
     .use(express.static(path.join(__dirname, 'build')))
+    .set('view engine', 'ejs')
     .get('/', function (req, res) {
         res.sendFile(path.join(__dirname, 'build', 'index.html'));
     })
@@ -32,4 +33,4 @@ express()
             res.send("Error " + err);
         }
     })
-    .listen(PORT, () => console.log(`Listening on port: ${PORT}`));
+    .listen(port, () => console.log(`Listening on port: ${port}`));
