@@ -4,7 +4,7 @@ const {Pool} = require('pg')
 const {getData, putData, postData, deleteData} = require('./db-utils');
 
 const PORT = process.env.PORT || 8080;
-const TABLE_NAME = process.env.TABLE_NAME;
+const TABLE_NAME = process.env.TABLE_NAME || 'running_t';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const db = new Pool({
