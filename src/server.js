@@ -6,13 +6,9 @@ const {getData, putData, postData, deleteData} = require('./db-utils');
 const PORT = process.env.PORT || 8080;
 const TABLE_NAME = process.env.TABLE_NAME;
 const db = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
+    connectionString: process.env.DATABASE_URL || process.env.LOCAL_DB_URL,
+    ssl: process.env.DATABASE_URL ? true : false
 });
-
-console.log(`port: ${process.env.PORT} / DATABASE_URL: ${process.env.DATABASE_URL}`);
 
 express()
     .use(express.static(__dirname))
