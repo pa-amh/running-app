@@ -7,7 +7,9 @@ const PORT = process.env.PORT || 8080;
 const TABLE_NAME = process.env.TABLE_NAME;
 const db = new Pool({
     connectionString: process.env.DATABASE_URL || process.env.LOCAL_DB_URL,
-    ssl: process.env.DATABASE_URL ? true : false
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
 
 express()
