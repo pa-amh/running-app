@@ -28,8 +28,8 @@ express()
         try {
             const client = await db.connect();
             const result = await client.query(`SELECT * FROM ${TABLE_NAME}`);
-            const results = {'results': (result) ? result.rows : null};
-            res.send(results);
+            // const results = {'results': (result) ? result.rows : null};
+            res.send(result);
             client.release();
         } catch (err) {
             res.send(err);
