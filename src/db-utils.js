@@ -17,7 +17,7 @@ const connectAndQuery = async (db, query) => {
 const getData = async (req, res, db) => {
     try {
         const client = await db.connect();
-        const result = await client.query(`SELECT * FROM ${process.env.TABLE_NAME}`);
+        const result = await client.query(`SELECT * FROM ${TABLE_NAME}`);
 
         res.send(result.rows);
     } catch(err) {
