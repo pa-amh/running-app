@@ -5,14 +5,22 @@ const {getData, putData, postData, deleteData} = require('./db-utils');
 
 const PORT = process.env.PORT || 8080;
 const TABLE_NAME = process.env.TABLE_NAME || 'running_t';
-
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-const db = new Pool({
+const LOCAL_CLIENT = {
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_DATABASE,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT
+};
+const HEROKU_CLIENT = {
     connectionString: process.env.DATABASE_URL || process.env.LOCAL_DB_URL,
     ssl: {
         rejectUnauthorized: false
     }
-});
+};
+
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+const db = new Pool(process.env.DATABASE_URL ? HEROKU_CLIENT : LOCAL_CLIENT);
 
 express()
     .use(express.static(__dirname))

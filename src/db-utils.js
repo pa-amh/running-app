@@ -15,10 +15,14 @@ const connectAndQuery = async (db, query) => {
 }
 
 const getData = async (req, res, db) => {
-    const query = `SELECT * FROM ${TABLE_NAME}`;
+    try {
+        const client = await db.connect();
+        const result = await client.query(`SELECT * FROM ${process.env.TABLE_NAME}`);
 
-    await connectAndQuery(db, query)
-        .then(results => res.send(results));
+        res.send(result.rows);
+    } catch(err) {
+        res.send(err);
+    }
 }
 
 const postData = async (req, res, db) => {
