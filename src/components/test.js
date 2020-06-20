@@ -8,8 +8,14 @@ const Test = () => {
 
     // const getData = () => {
         fetch(`${BASE_PATH}/data`)
-            .then(res => res.json())
-            .then(items => setData(items))
+            .then(res => {
+                console.log(res);
+                res.json();
+            })
+            .then(items => {
+                console.log(items);
+                setData(items);
+            })
             .catch(err => console.error(err));
     // }
 
