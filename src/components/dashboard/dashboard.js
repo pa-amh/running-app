@@ -1,8 +1,7 @@
 import './dashboard.css'
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Modal from '../modal/modal';
 import Button from "../button/button";
-import data from '../../assets/data.json';
 import Divider from "../divider/divider";
 import SummaryData from "../summary-data/summary-data";
 import DataItem from "../data-item/data-item";
@@ -11,8 +10,10 @@ import {calcData, sortData} from "../../utils/data.utils";
 import {integerToHhMm, decimalToMmSs} from "../../utils/datetime.utils";
 
 const Dashboard = () => {
+    const PORT = process.env.PORT || 3000;
 
-    const [myData, setMyData] = useState(data);
+    const [myData, setMyData] = useState(null);
+    const [dataError, setError] = useState(false)
 
     const [showModal, setShowModal] = useState(false);
     const [modalData, setModalData] = useState(null);
@@ -21,13 +22,35 @@ const Dashboard = () => {
     const [snackbarData, setSnackbarData] = useState(null);
 
     /**
+     * Run on component mount
+     */
+    useEffect(() => {
+        /**
+         * Retrieve Data from Database
+         * @returns {Promise<void>}
+         */
+        const fetchData = () => {
+            fetch(`http://localhost:${PORT}/data`)
+                .then(res => res.json())
+                .then(res => setMyData(res))
+                .catch(err => setError(err));
+        }
+
+        fetchData();
+    }, [PORT]);
+
+    /**
      * Break down json data and return separate items
      */
     const GetData = () => {
+        while (!myData) {
+            return <h1>Loading...</h1>
+        }
+
         sortData(myData);
 
         const items = myData.map(data =>
-            <DataItem key={data.date} handleEdit={handleEdit}
+            <DataItem key={data.id} handleEdit={handleEdit}
                       handleDelete={removeData} data={data} />
         );
         return <ul className={`data-list`}>{items}</ul>
@@ -44,7 +67,7 @@ const Dashboard = () => {
      * @returns {string}
      */
     const getTotalDistance = () => {
-        return calcData(myData, 'distance', 2) + 'Km';
+        if (myData) return calcData(myData, 'distance', 2) + 'Km';
     }
 
     /**
@@ -111,7 +134,7 @@ const Dashboard = () => {
                 <div className="summary">
                     <SummaryData title="Total distance" data={getTotalDistance()} />
                     <SummaryData title="Total time" data={integerToHhMm(myData)} />
-                    <SummaryData title="Average Km" data={decimalToMmSs(myData)} />
+                {/*    <SummaryData title="Average Km" data={decimalToMmSs(myData)} />*/}
                 </div>
                 <Divider />
                 {GetData()}

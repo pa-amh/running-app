@@ -12,11 +12,11 @@ export const calcData = (data, type, decimalPlaces) => {
     if (type === 'average') {
         value = (calcData(data, 'time') / calcData(data, 'distance'));
     } else {
-        data.forEach(data => {
-            value += data[type];
+        data.forEach(item => {
+            // Parse float since DB returns distance & time as string
+            value += parseFloat(item[type]);
         });
     }
-
     return decimalPlaces ? value.toFixed(decimalPlaces) : value;
 }
 

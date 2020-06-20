@@ -24,11 +24,13 @@ export const getFormattedDate = (date, options) => {
  * @returns {string} converted time in format `hh hours mm mins`
  */
 export const integerToHhMm = data => {
-    const time = calcData(data, 'time');
-    const hours = Math.floor(time / 60);
-    const minutes = time % 60;
+    if (data) {
+        const time = calcData(data, 'time');
+        const hours = Math.floor(time / 60);
+        const minutes = Math.round(time % 60);
 
-    return `${hours}hrs ${minutes}mins`;
+        return `${hours}hrs ${minutes}mins`;
+    }
 };
 
 /**

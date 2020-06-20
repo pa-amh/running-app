@@ -6,12 +6,12 @@ const {Pool} = require('pg');
 const {getData, putData, postData, deleteData, resetDb} = require('./db-utils');
 
 const PORT = process.env.PORT || 8080;
-const TABLE_NAME = process.env.TABLE_NAME || 'running_t';
 const DB_URL = process.env.DATABASE_URL || process.env.LOCAL_DB_URL;
+const SSL_OPTIONS = process.env.DATABASE_URL ? {rejectUnauthorized: false} : false;
 
 const HEROKU_CLIENT = {
     connectionString: DB_URL,
-    ssl: process.env.DATABASE_URL ? {rejectUnauthorized: false} : false
+    ssl: SSL_OPTIONS
 };
 
 const db = new Pool(HEROKU_CLIENT);
