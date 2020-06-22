@@ -9,14 +9,30 @@
 export const calcData = (data, type, decimalPlaces) => {
     let value = 0;
 
-    if (type === 'average') {
-        value = (calcData(data, 'time') / calcData(data, 'distance'));
-    } else {
-        data.forEach(item => {
-            // Parse float since DB returns distance & time as string
-            value += parseFloat(item[type]);
-        });
+    switch(type) {
+        case 'average':
+            const time = calcData(data, 'time');
+            const distance = calcData(data, 'distance');
+            const average = time / distance;
+
+            value = decimalPlaces ? average.toFixed(decimalPlaces) : average;
+            break;
+        case 'time':
+            data.forEach(item => {
+                value += ((parseInt(item.minutes) * 60) + parseInt(item.seconds));
+            });
+
+            break;
+        case 'distance':
+            data.forEach(item => {
+                value += parseFloat(item.distance);
+            });
+
+            break;
+        default:
+            throw Error('No type entered to calculate');
     }
+
     return decimalPlaces ? value.toFixed(decimalPlaces) : value;
 }
 

@@ -1,4 +1,5 @@
-const defaultData = require('./assets/test-data.json');
+const defaultData = require('./assets/default-data.json');
+const testData = require('./assets/data.json');
 const TABLE_NAME = process.env.TABLE_NAME;
 
 /**
@@ -53,10 +54,10 @@ const getData = async (req, res, db) => {
  * @returns {Promise<void>}
  */
 const postData = async (req, res, db) => {
-    const {date, distance, time} = req.body;
-    const query = `INSERT INTO ${TABLE_NAME} (date, distance, time) VALUES ($1, $2, $3) RETURNING *`;
+    const {date, distance, minutes, seconds} = req.body;
+    const query = `INSERT INTO ${TABLE_NAME} (date, distance, minutes, seconds) VALUES ($1, $2, $3, $4) RETURNING *`;
 
-    const result = await connectAndQuery(db, query, [date, distance, time]);
+    const result = await connectAndQuery(db, query, [date, distance, minutes, seconds]);
     res.send(result.rows);
 };
 
@@ -68,10 +69,10 @@ const postData = async (req, res, db) => {
  * @returns {Promise<void>}
  */
 const putData = async (req, res, db) => {
-    const { id, date, distance, time } = req.body;
-    const query = `UPDATE ${TABLE_NAME} SET date=$1, distance=$2, time=$3 WHERE id=$4 RETURNING *`;
+    const { id, date, distance, minutes, seconds } = req.body;
+    const query = `UPDATE ${TABLE_NAME} SET date=$1, distance=$2, minutes=$3, seconds=$4 WHERE id=$5 RETURNING *`;
 
-    const result = await connectAndQuery(db, query, [date, distance, time, id]);
+    const result = await connectAndQuery(db, query, [date, distance, minutes, seconds, id]);
     res.send(result.rows);
 };
 
@@ -95,20 +96,23 @@ const deleteData = async (req, res, db) => {
  * @param req
  * @param res
  * @param db
+ * @param type
  * @returns {Promise<void>}
  */
-const resetDb = async (req, res, db) => {
+const resetDb = async (req, res, db, type) => {
     const drop = `DROP TABLE ${TABLE_NAME};`;
-    const create = `CREATE TABLE ${TABLE_NAME} (id SERIAL, date text, distance numeric(4,2), time numeric(5,2));`;
+    const create = `CREATE TABLE ${TABLE_NAME} (id SERIAL, date text, distance numeric(4,2), minutes integer, seconds integer);`;
+
+    const data = (type === 'test') ? testData : defaultData;
 
     try {
         const client = await db.connect();
         client.query(drop)
             .then(client.query(create))
             .then(() => {
-                defaultData.forEach(data => {
-                    const insert = `INSERT INTO ${TABLE_NAME} (date, distance, time) VALUES ($1, $2, $3)`;
-                    const values = [data.date, data.distance, data.time];
+                data.forEach(data => {
+                    const insert = `INSERT INTO ${TABLE_NAME} (date, distance, minutes, seconds) VALUES ($1, $2, $3, $4)`;
+                    const values = [data.date, data.distance, data.minutes, data.seconds];
                     client.query(insert, values)
                 })
             });

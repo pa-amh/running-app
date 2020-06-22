@@ -4,10 +4,10 @@ import Modal from '../modal/modal';
 import Button from "../button/button";
 import Divider from "../divider/divider";
 import SummaryData from "../summary-data/summary-data";
-import DataItem from "../data-item/data-item";
 import Snackbar from "../snackbar/snackbar";
-import {calcData, sortData} from "../../utils/data.utils";
-import {integerToHhMm, decimalToMmSs} from "../../utils/datetime.utils";
+import {calcData} from "../../utils/data.utils";
+import {integerToHhMmSs, decimalToMmSs} from "../../utils/datetime.utils";
+import DataList from "../data-list/data-list";
 
 const Dashboard = () => {
     const PORT = process.env.PORT || 3000;
@@ -34,28 +34,16 @@ const Dashboard = () => {
                 .then(res => res.json())
                 .then(res => setMyData(res))
                 .catch(err => setError(err));
-        }
+        };
 
         fetchData();
     }, [PORT]);
 
     /**
-     * Break down json data and return separate items
+     * Handle click of edit data button
+     *
+     * @param data
      */
-    const GetData = () => {
-        while (!myData) {
-            return <h1>Loading...</h1>
-        }
-
-        sortData(myData);
-
-        const items = myData.map(data =>
-            <DataItem key={data.id} handleEdit={handleEdit}
-                      handleDelete={removeData} data={data} />
-        );
-        return <ul className={`data-list`}>{items}</ul>
-    };
-
     const handleEdit = data => {
         setModalData(data)
         setShowModal(true);
@@ -74,27 +62,61 @@ const Dashboard = () => {
      * Toggle modal to either show or hide
      */
     const toggleModal = () => {
-        if (showModal) {
-            setModalData(null)
-        }
-
+        if (showModal) setModalData(null);
         setShowModal(!showModal);
+    }
+
+    /**
+     * Edit existing data
+     *
+     * @param data
+     */
+    const editData = data => {
+        fetch(`http://localhost:${PORT}/data`, {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: data.id,
+                date: data.date,
+                distance: data.distance,
+                minutes: data.minutes,
+                seconds: data.seconds
+            })
+        })
+            .then(res => res.json())
+            .then(res => {
+                setMyData(myData.map(data => (data.id === res[0].id ? res[0] : data)));
+                setModalData(null);
+            })
+            .catch(err => setError(err));
     }
 
     /**
      * Add data to data array
      *
-     * @param newData
+     * @param data
      */
-    const addData = newData => {
-        if (modalData) {
-            setMyData(myData.map(data => (data.id === newData.id ? newData : data)));
-            setModalData(null);
-            return;
-        }
-
-        newData.id = myData.length + 1;
-        setMyData([...myData, newData]);
+    const addData = data => {
+        fetch(`http://localhost:${PORT}/data`, {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                date: data.date,
+                distance: data.distance,
+                minutes: data.minutes,
+                seconds: data.seconds
+            })
+        })
+            .then(res => res.json())
+            .then(res => {
+                res[0].id = myData.length + 1;
+                setMyData([...myData, res[0]]);
+            })
+            .catch(err => setError(err));
     };
 
     /**
@@ -103,8 +125,19 @@ const Dashboard = () => {
      * @param data
      */
     const removeData = data => {
-        triggerSnackbar(data);
-        setMyData(myData.filter(item => item.date !== data.date));
+        fetch(`http://localhost:${PORT}/data`, {
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: data.id
+            })
+        })
+            .then(res => res.json())
+            .then(res => setMyData(myData.filter(item => item.date !== res[0].date)))
+            .then(() => triggerSnackbar(data))
+            .catch(err => setError(err));
     }
 
     /**
@@ -133,18 +166,17 @@ const Dashboard = () => {
                 <h1>Running dashboard</h1>
                 <div className="summary">
                     <SummaryData title="Total distance" data={getTotalDistance()} />
-                    <SummaryData title="Total time" data={integerToHhMm(myData)} />
-                {/*    <SummaryData title="Average Km" data={decimalToMmSs(myData)} />*/}
+                    <SummaryData title="Total time" data={integerToHhMmSs(myData)} />
+                    <SummaryData title="Average Km" data={decimalToMmSs(myData)} />
                 </div>
                 <Divider />
-                {GetData()}
+                <DataList data={myData} handleEdit={handleEdit} handleDelete={removeData} />
                 <Divider />
                 <Button numBtns="1" role="add" handleClick={toggleModal}>Add new workout</Button>
             </div>
             {showModal &&
-                <Modal handleAdd={addData} handleClose={toggleModal} mainData={myData} editData={modalData} /> }
-            <Snackbar show={showSnackbar} alert="remove" data={snackbarData}
-                      handleAnimationEnd={snackAnimationEnd} handleUndo={addData}/>
+                <Modal handleAdd={addData} handleEdit={editData} handleClose={toggleModal} mainData={myData} editData={modalData} /> }
+            <Snackbar show={showSnackbar} alert="remove" data={snackbarData} handleAnimationEnd={snackAnimationEnd} handleUndo={addData}/>
         </div>
     )
 };

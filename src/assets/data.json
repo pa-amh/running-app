@@ -1,26 +1,26 @@
 [
   {
-    "id": 1,
     "date": "2020-05-01",
     "distance": 5.23,
-    "time": 31
+    "minutes": 31,
+    "seconds": 33
   },
   {
-    "id": 2,
     "date": "2020-05-03",
     "distance": 5.23,
-    "time": 33
+    "minutes": 33,
+    "seconds": 18
   },
   {
-    "id": 3,
     "date": "2020-05-05",
     "distance": 5.23,
-    "time": 31
+    "minutes": 31,
+    "seconds": 43
   },
   {
-    "id": 4,
     "date": "2020-05-07",
     "distance": 5.23,
-    "time": 32
+    "minutes": 32,
+    "seconds": 54
   }
 ]

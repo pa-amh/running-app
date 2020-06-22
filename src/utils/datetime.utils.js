@@ -23,13 +23,15 @@ export const getFormattedDate = (date, options) => {
  *
  * @returns {string} converted time in format `hh hours mm mins`
  */
-export const integerToHhMm = data => {
+export const integerToHhMmSs = data => {
     if (data) {
-        const time = calcData(data, 'time');
-        const hours = Math.floor(time / 60);
-        const minutes = Math.round(time % 60);
+        const totalSecs = calcData(data, 'time');
 
-        return `${hours}hrs ${minutes}mins`;
+        let hours   = Math.floor(totalSecs / 3600);
+        let minutes = Math.floor((totalSecs - (hours * 3600)) / 60);
+        let seconds = totalSecs - (hours * 3600) - (minutes * 60);
+
+        return `${hours}hrs ${minutes}mins ${seconds}secs`;
     }
 };
 
@@ -49,9 +51,11 @@ export const timePrefix = time => {
  * @returns {string} converted time in format `mm mins ss secs`
  */
 export const decimalToMmSs = data => {
-    const time = calcData(data,'average');
-    const min = Math.floor(time);
-    const sec = Math.floor((time * 60) % 60);
+    if (data) {
+        const totalSecs = calcData(data, 'average');
+        const minutes = Math.floor(totalSecs / 60);
+        const seconds = Math.round(totalSecs - (minutes * 60));
 
-    return `${min}mins ${timePrefix(sec)}${sec}secs`;
+        return `${minutes}mins ${timePrefix(seconds)}${seconds}secs`;
+    }
 }

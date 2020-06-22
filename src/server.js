@@ -29,7 +29,8 @@ express()
     })
     // Get
     .get('/data', (req, res) => getData(req, res, db))
-    .get('/reset', (req, res) => resetDb(req, res, db))
+    .get('/reset/test', (req, res) => resetDb(req, res, db, 'test'))
+    .get('/reset/full', (req, res) => resetDb(req, res, db, 'full'))
     // Create
     .post('/data', (req, res) => postData(req, res, db))
     // Update

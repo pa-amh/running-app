@@ -67,6 +67,10 @@
     padding: 9px 0 9px 8px;
 }
 
+.full-pad {
+    padding-right: 8px;
+}
+
 input {
     width: 100%;
     font-size: 20pt;

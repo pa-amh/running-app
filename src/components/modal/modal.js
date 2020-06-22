@@ -3,11 +3,11 @@ import React, {useState, useEffect} from 'react';
 import Divider from '../divider/divider';
 import Button from "../button/button";
 
-const Modal = ({handleClose, handleAdd, mainData, editData}) => {
+const Modal = ({handleClose, handleAdd, handleEdit, mainData, editData}) => {
 
     // Date as string in format yyyy-mm-dd
     const today = new Date().toISOString().substr(0, 10);
-    const initialFormState = {id: null, date: today, distance: 5.23, time: true};
+    const initialFormState = {id: null, date: today, distance: 5.23, minutes: true, seconds: 0};
     const initialErrorState = {
         date: {
             error: false,
@@ -17,9 +17,13 @@ const Modal = ({handleClose, handleAdd, mainData, editData}) => {
             error: false,
             errorMsg: 'Enter a distance in kilometers'
         },
-        time: {
+        minutes: {
             error: false,
-            errorMsg: 'Enter a time in minutes'
+            errorMsg: 'Enter a valid amount of minutes'
+        },
+        seconds: {
+            error: false,
+            errorMsg: 'Enter a valid amount of seconds'
         }
     };
 
@@ -27,6 +31,9 @@ const Modal = ({handleClose, handleAdd, mainData, editData}) => {
     const [formData, setFormData] = useState(initialFormState);
     const [formError, setFormError] = useState(initialErrorState);
 
+    /**
+     * Run on component mount
+     */
     useEffect(() => {
         if (editData) setFormData(editData);
     }, [editData]);
@@ -38,10 +45,10 @@ const Modal = ({handleClose, handleAdd, mainData, editData}) => {
     const submitData = event => {
         event.preventDefault();
 
-        const {distance, time, date} = formError;
-        if (distance.error || time.error || date.error) return;
+        const {distance, seconds, minutes, date} = formError;
+        if (distance.error || minutes.error || date.error || seconds.error) return;
 
-        handleAdd(formData);
+        editData ? handleEdit(formData) : handleAdd(formData);
         resetForm();
         handleClose();
     }
@@ -148,22 +155,29 @@ const Modal = ({handleClose, handleAdd, mainData, editData}) => {
                         </p>
                         <p>
                             <span className={`input-row`}>
-                                <label>Time:</label>
+                                <label>Minutes:</label>
                                 <input
-                                    type="number" name="time" min="1"
-                                    onChange={handleChange}
-                                    value={formData.time}
-                                    autoFocus required placeholder="Time"
-                                    className={formError.time.error ? 'input-error error' : ''} />
-                                <span className={`input-units`}>mins</span>
+                                    type="number" name="minutes" min="1"
+                                    onChange={handleChange} value={formData.minutes}
+                                    autoFocus required placeholder="Minutes"
+                                    className={formError.minutes.error ? 'input-error error' : ''} />
+                                <span className="input-units full-pad">mins</span>
+                                <input
+                                    type="number" name="seconds" min="0"
+                                    onChange={handleChange} value={formData.seconds}
+                                    required placeholder="Seconds"
+                                    className={formError.seconds.error ? 'input-error error' : ''}/>
+                                <span className="input-units">secs</span>
                             </span>
-                            {formError.time.error
-                                ? <span className={`error`}>{formError.time.errorMsg}</span> : null}
+                            {formError.minutes.error
+                                ? <span className={`error`}>{formError.minutes.errorMsg}</span> : null}
+                            {formError.seconds.error
+                                ? <span className={`error`}>{formError.seconds.errorMsg}</span> : null}
                         </p>
                         <Divider />
                         <div className={`footer`}>
                             <Button numBtns="2" handleClick={resetAndCloseModal}>Cancel</Button>
-                            <Button numBtns="2" role="submit">Add</Button>
+                            <Button numBtns="2" role="submit">{editData ? 'Update' : 'Add'}</Button>
                         </div>
                     </form>
                 </div>
