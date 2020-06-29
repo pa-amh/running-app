@@ -48,9 +48,14 @@
     color: red;
 }
 
+.errorMsg {
+    margin-left: 40px;
+}
+
 .input-row {
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 
 .input-error {
@@ -67,7 +72,7 @@
     padding: 9px 0 9px 8px;
 }
 
-.full-pad {
+.input-units:not(:last-child) {
     padding-right: 8px;
 }
 
@@ -90,10 +95,17 @@ input::-webkit-inner-spin-button{
 
 label {
     display: none;
+    align-items: center;
 }
 
 .footer {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+.modal-icon {
+    margin-right: 16px;
+    font-size: 20pt;
+    color: var(--colour-dark-grey);
 }

@@ -1,25 +1,20 @@
 import React from "react";
 import './button.css';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
-const iconCodes = {
-    cancel: "&#10006;",
-    edit: "&#9998;"
-}
-
-const Button = ({numBtns, handleClick = null, role = 'button', icon = 'cancel', children}) => {
+const Button = ({isDisabled, className, numBtns, handleClick = null, role = 'button', icon = 'trash', children}) => {
     if (role === 'icon') {
-        return <button
-            className={`btn btn-button btn-icon-button`}
-            role={role}
-            onClick={handleClick}
-            dangerouslySetInnerHTML={{__html: iconCodes[icon]}}
-        />
+        return <button className={`btn btn-button btn-icon-button`} role={role}
+                   onClick={handleClick}>
+            <FontAwesomeIcon icon={['fa', icon]} />
+        </button>
     }
 
     return <button
-        className={`btn btn-${role} ${numBtns ? `button-${numBtns}` : ''}`}
+        className={`btn ${isDisabled ? 'btn-disabled' : `btn-${role}`} ${numBtns ? `button-${numBtns}` : ''} ${className}`}
         type={role}
         onClick={handleClick}
+        disabled={isDisabled}
     >{children}</button>
 }
 

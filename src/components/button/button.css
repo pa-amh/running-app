@@ -40,6 +40,13 @@
     background: var(--colour-grey);
 }
 
+.btn-disabled {
+    background: var(--colour-grey);
+    color: var(--colour-dark-grey);
+    border: 1px solid var(--colour-dark-grey);
+    cursor: default;
+}
+
 .btn-add,
 .btn-submit {
     background: var(--colour-blue-main);
@@ -53,9 +60,15 @@
 }
 
 .btn-icon-button {
+    box-sizing: border-box;
     border: 0;
     outline: 0;
-    width: 43px;
-    height: 43px;
-    border-radius: 43px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+}
+
+.btn-dashboard {
+    /*margin-bottom: 8px;*/
+    margin-bottom: 24px;
 }

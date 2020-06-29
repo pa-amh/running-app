@@ -113,7 +113,6 @@ const Dashboard = () => {
         })
             .then(res => res.json())
             .then(res => {
-                res[0].id = myData.length + 1;
                 setMyData([...myData, res[0]]);
             })
             .catch(err => setError(err));
@@ -170,9 +169,10 @@ const Dashboard = () => {
                     <SummaryData title="Average Km" data={decimalToMmSs(myData)} />
                 </div>
                 <Divider />
+                {/*<Button className="btn-dashboard" numBtns="1" role="add" handleClick={toggleModal}>Add new workout</Button>*/}
                 <DataList data={myData} handleEdit={handleEdit} handleDelete={removeData} />
                 <Divider />
-                <Button numBtns="1" role="add" handleClick={toggleModal}>Add new workout</Button>
+                <Button className="btn-dashboard" numBtns="1" role="add" handleClick={toggleModal}>Add new workout</Button>
             </div>
             {showModal &&
                 <Modal handleAdd={addData} handleEdit={editData} handleClose={toggleModal} mainData={myData} editData={modalData} /> }

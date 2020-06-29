@@ -27,11 +27,15 @@ export const integerToHhMmSs = data => {
     if (data) {
         const totalSecs = calcData(data, 'time');
 
-        let hours   = Math.floor(totalSecs / 3600);
-        let minutes = Math.floor((totalSecs - (hours * 3600)) / 60);
-        let seconds = totalSecs - (hours * 3600) - (minutes * 60);
+        const hours   = Math.floor(totalSecs / 3600);
+        const minutes = Math.floor((totalSecs - (hours * 3600)) / 60);
+        const seconds = totalSecs - (hours * 3600) - (minutes * 60);
 
-        return `${hours}hrs ${minutes}mins ${seconds}secs`;
+        const hrs = hours ? `${hours}${(hours < 2) ? 'hr' : 'hrs'} ` : '';
+        const mins = minutes ? `${seconds > 29 ? (minutes + 1) : minutes}mins${hours ? '' : ' '}` : '';
+        const secs = hours ? '' : `${seconds}secs`;
+
+        return `${hrs}${mins}${secs}`;
     }
 };
 

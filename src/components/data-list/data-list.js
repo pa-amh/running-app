@@ -1,6 +1,6 @@
 import './data-list.css';
 import {sortData} from "../../utils/data.utils";
-import DataItem from "../data-item/data-item";
+import DataRow from "../data-row/data-row";
 import React from "react";
 
 const DataList = ({data, handleEdit, handleDelete}) => {
@@ -15,8 +15,8 @@ const DataList = ({data, handleEdit, handleDelete}) => {
         sortData(data);
 
         const items = data.map(data =>
-            <DataItem key={data.id} handleEdit={handleEdit}
-                      handleDelete={handleDelete} data={data} />
+            <DataRow key={data.id} handleEdit={handleEdit}
+                     handleDelete={handleDelete} data={data} />
         );
         return <ul className={`data-list`}>{items}</ul>
     };
