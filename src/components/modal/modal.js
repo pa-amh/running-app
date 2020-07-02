@@ -2,7 +2,7 @@ import './modal.css';
 import React, {useState, useEffect} from 'react';
 import Divider from '../divider/divider';
 import Button from "../button/button";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import ModalInput from "../modal-input/modal-input";
 
 const Modal = ({handleClose, handleAdd, handleEdit, mainData, editData}) => {
     let obj;
@@ -16,7 +16,7 @@ const Modal = ({handleClose, handleAdd, handleEdit, mainData, editData}) => {
         },
         distance: {
             error: false,
-            errorMsg: 'Enter a distance in kilometers'
+            errorMsg: 'Enter a valid distance'
         },
         hours: {
             error: false,
@@ -39,9 +39,19 @@ const Modal = ({handleClose, handleAdd, handleEdit, mainData, editData}) => {
     /**
      * Run on component mount
      */
-    useEffect(x => {
+    useEffect(() => {
         validateForm();
+
+        const keyListener = e => {
+            const listener = keyListenersMap.get(e.keyCode);
+            return listener && listener(e);
+        }
+        document.addEventListener("keydown", keyListener);
+        return () => document.removeEventListener("keydown", keyListener);
     }, [formData]);
+    // TODO: Integrate full deps with useCallback and useRef usage
+
+    const keyListenersMap = new Map([[27, handleClose]]);
 
     /**
      * Determine if form has any sort of error
@@ -71,11 +81,8 @@ const Modal = ({handleClose, handleAdd, handleEdit, mainData, editData}) => {
      */
     const validateForm = () => {
         obj = JSON.parse(JSON.stringify(formError));
-        const names = ['date', 'distance', 'minutes', 'seconds'];
+        const names = ['date', 'distance', 'hours', 'minutes', 'seconds'];
         names.forEach(name => validateInput(name));
-
-        console.log(formData);
-        console.log(formError);
     }
 
     /**
@@ -115,7 +122,6 @@ const Modal = ({handleClose, handleAdd, handleEdit, mainData, editData}) => {
      * @param event
      */
     const handleChange = event => {
-        console.log('handling change');
         const {name, value} = event.target;
         setFormData({...formData, [name]: (name !== 'date') ? (parseFloat(value) || '') : value});
     }
@@ -140,68 +146,23 @@ const Modal = ({handleClose, handleAdd, handleEdit, mainData, editData}) => {
         resetForm();
     }
 
-
     return (
         <div className={`modal-container`}>
             <div className={`modal-overlay`} />
                 <div className={`modal`}>
                     <div className={`modal-content`}>
-                    <div className={`title`}>{editData ? 'Edit workout' : 'New workout'}</div>
-                    <Divider />
-                    <form onSubmit={submitData}>
-                        <p>
-                            <span className={`input-row`}>
-                                <label>Date:</label>
-                                <FontAwesomeIcon className="modal-icon" icon={['fa', 'calendar-day']} />
-                                <input
-                                    id="date" type="date" name="date" value={formData.date}
-                                    onChange={handleChange} required placeholder="date"
-                                    className={formError.date.error ? 'input-error error' : 'normal'} />
-                            </span>
-                            {formError.date.error
-                                ? <span className={`error errorMsg`}>{formError.date.errorMsg}</span> : null}
-                        </p>
-                        <p>
-                            <span className={`input-row`}>
-                                <label>Distance:</label>
-                                <FontAwesomeIcon className="modal-icon" icon={['fa', 'running']} />
-                                <input
-                                    type="number" step="0.01" name="distance" min="0.01"
-                                    value={formData.distance} onChange={handleChange}
-                                    required autoComplete="off" placeholder="distance"
-                                    className={formError.distance.error ? 'input-error error' : 'normal'} />
-                                <span className={`input-units`}>Km</span>
-                            </span>
-                            {formError.distance.error
-                                ? <span className={`error errorMsg`}>{formError.distance.errorMsg}</span> : null}
-                        </p>
-                        <p>
-                            <span className="input-row">
-                                <label>Minutes:</label>
-                                <FontAwesomeIcon className="modal-icon" icon={['fa', 'stopwatch']} />
-                                <input type="number" name="hours" min="0" onChange={handleChange} value={formData.hours}
-                                    required placeholder="hrs" className={formError.hours.error ? 'input-error error' : ''} />
-                                <span className="input-units full-pad">hrs</span>
-                                <input type="number" name="minutes" min="1" onChange={handleChange} value={formData.minutes}
-                                    autoFocus required placeholder="mins"
-                                    className={formError.minutes.error ? 'input-error error' : ''} />
-                                <span className="input-units">mins</span>
-                                <input type="number" name="seconds" min="0" onChange={handleChange} value={formData.seconds}
-                                    required placeholder="secs"
-                                    className={formError.seconds.error ? 'input-error error' : ''}/>
-                                <span className="input-units">secs</span>
-                            </span>
-                            {formError.minutes.error
-                                ? <span className={`error errorMsg`}>{formError.minutes.errorMsg}</span> : null}
-                            {formError.seconds.error
-                                ? <span className={`error errorMsg`}>{formError.seconds.errorMsg}</span> : null}
-                        </p>
+                        <div className={`title`}>{editData ? 'Edit workout' : 'New workout'}</div>
                         <Divider />
-                        <div className={`footer`}>
-                            <Button numBtns="2" handleClick={resetAndCloseModal}>Cancel</Button>
-                            <Button isDisabled={formHasError()} numBtns="2" role="submit">{editData ? 'Update' : 'Add'}</Button>
-                        </div>
-                    </form>
+                        <form onSubmit={submitData}>
+                            <ModalInput name="date" error={formError} data={formData} handleChange={handleChange} />
+                            <ModalInput name="distance" error={formError} data={formData} handleChange={handleChange} />
+                            <ModalInput name="time" error={formError} data={formData} handleChange={handleChange} />
+                            <Divider />
+                            <div className={`footer`}>
+                                <Button numBtns="2" handleClick={resetAndCloseModal}>Cancel</Button>
+                                <Button isDisabled={formHasError()} numBtns="2" role="submit">{editData ? 'Update' : 'Add'}</Button>
+                            </div>
+                        </form>
                 </div>
             </div>
         </div>

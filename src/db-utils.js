@@ -1,5 +1,5 @@
-const defaultData = require('./assets/default-data.json');
-const testData = require('./assets/data.json');
+const defaultData = require('./assets/db/default-data.json');
+const testData = require('./assets/db/data.json');
 const TABLE_NAME = process.env.TABLE_NAME;
 
 /**

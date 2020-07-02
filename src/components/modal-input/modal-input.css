@@ -1,0 +1,68 @@
+@import "../../assets/variables.css";
+
+label {
+    display: none;
+    align-items: center;
+}
+
+input {
+    width: 100%;
+    font-size: 20pt;
+    border: 1px solid var(--colour-grey);
+    border-radius: 5px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+input::-webkit-calendar-picker-indicator,
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+    display: none;
+    margin: 0;
+    padding: 0;
+}
+
+.modal-input-units {
+    font-size: 20pt;
+    margin: 9px 8px 9px 8px;
+}
+
+.last-input {
+    margin-right: 0;
+}
+
+.modal-icon {
+    margin-right: 16px;
+    font-size: 20pt;
+    color: var(--colour-dark-grey);
+}
+
+.modal-input-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.modal-input-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+.input-error {
+    color: red;
+    border-color: red;
+}
+
+.input-error:focus {
+    outline-color: red;
+}
+
+.error {
+    color: red;
+}
+
+.errorMsg {
+    margin-left: 40px;
+}
